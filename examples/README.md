@@ -6,6 +6,7 @@
 | `weather` | `com.thelightphone.weather` | weather tool via Open-Meteo API |
 | `authenticator` | `com.thelightphone.authenticator` | 2FA authenticator
 | `audio-demo` | `com.thelightphone.audiodemo` | audio SDK showcase: player, recorder, capture, tone
+| `reflect` | `com.thelightphone.reflect` | daily journaling prompt, shake to shuffle
 
 ## How to run on device
 
@@ -21,5 +22,8 @@ adb shell am start -n com.thelightphone.authenticator/com.thelightphone.sdk.Ligh
 
 ./gradlew :examples:audio-demo:installDebug
 adb shell am start -n com.thelightphone.audiodemo/com.thelightphone.sdk.LightActivity
+
+./gradlew :examples:reflect:installDebug
+adb shell am start -n com.thelightphone.reflect/com.thelightphone.sdk.LightActivity
 ```
 

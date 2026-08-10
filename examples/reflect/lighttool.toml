@@ -1,0 +1,8 @@
+[tool]
+id = "com.thelightphone.reflect"
+label = "Reflect"
+versionCode = 1
+versionName = "1.0.0"
+serverPackage = "com.lightos"
+# change if you run this on the emulator!
+# serverPackage = "com.thelightphone.sdk.emulator"
