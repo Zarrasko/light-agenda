@@ -7,7 +7,7 @@
 | `authenticator` | `com.thelightphone.authenticator` | 2FA authenticator
 | `audio-demo` | `com.thelightphone.audiodemo` | audio SDK showcase: player, recorder, capture, tone
 | `reflect` | `com.thelightphone.reflect` | daily journaling prompt, shake to shuffle
-| `kagi-news` | `com.thelightphone.kaginews` | Kagi News reader via the public kite.kagi.com feed
+| `kagi-news` | `com.thelightphone.kaginews` | "Brief" — Kagi News reader via the public kite.kagi.com feed
 
 ## How to run on device
 

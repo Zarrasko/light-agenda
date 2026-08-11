@@ -62,7 +62,6 @@ class NewsScreen(sealedActivity: SealedLightActivity) :
                         categories = mode.categories,
                         totalCategoryCount = mode.totalCategoryCount,
                         onSelect = viewModel::openCategory,
-                        onRefresh = viewModel::refreshCategories,
                         onOpenSettings = viewModel::openCategorySettings,
                     )
 
@@ -103,7 +102,7 @@ class NewsScreen(sealedActivity: SealedLightActivity) :
 private fun LoadingContent(message: String) {
     Column(modifier = Modifier.fillMaxSize()) {
         LightTopBar(
-            center = LightTopBarCenter.Text("Kagi News"),
+            center = LightTopBarCenter.Text("Brief"),
             modifier = Modifier.padding(bottom = 1f.gridUnitsAsDp()),
         )
         Box(
@@ -127,12 +126,11 @@ private fun CategoriesContent(
     categories: List<NewsCategory>,
     totalCategoryCount: Int,
     onSelect: (NewsCategory) -> Unit,
-    onRefresh: () -> Unit,
     onOpenSettings: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         LightTopBar(
-            center = LightTopBarCenter.Text("Kagi News"),
+            center = LightTopBarCenter.Text("Brief"),
             modifier = Modifier.padding(bottom = 0.25f.gridUnitsAsDp()),
         )
 
@@ -140,7 +138,7 @@ private fun CategoriesContent(
             val message = if (totalCategoryCount > 0) {
                 "No categories selected. Tap the gear icon below to choose which ones you want to see."
             } else {
-                "No categories loaded. Tap refresh to try again."
+                "Couldn't load categories. Check your connection and reopen Brief."
             }
             Box(
                 modifier = Modifier
@@ -182,11 +180,7 @@ private fun CategoriesContent(
 
         LightBottomBar(
             items = listOf(
-                LightBarButton.LightIcon(
-                    icon = LightIcons.REFRESH,
-                    onClick = onRefresh,
-                    contentDescription = "Refresh",
-                ),
+                null,
                 LightBarButton.LightIcon(
                     icon = LightIcons.SETTINGS,
                     onClick = onOpenSettings,
