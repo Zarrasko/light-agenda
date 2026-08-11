@@ -7,6 +7,7 @@
 | `authenticator` | `com.thelightphone.authenticator` | 2FA authenticator
 | `audio-demo` | `com.thelightphone.audiodemo` | audio SDK showcase: player, recorder, capture, tone
 | `reflect` | `com.thelightphone.reflect` | daily journaling prompt, shake to shuffle
+| `kagi-news` | `com.thelightphone.kaginews` | Kagi News reader via the public kite.kagi.com feed
 
 ## How to run on device
 
@@ -25,5 +26,8 @@ adb shell am start -n com.thelightphone.audiodemo/com.thelightphone.sdk.LightAct
 
 ./gradlew :examples:reflect:installDebug
 adb shell am start -n com.thelightphone.reflect/com.thelightphone.sdk.LightActivity
+
+./gradlew :examples:kagi-news:installDebug
+adb shell am start -n com.thelightphone.kaginews/com.thelightphone.sdk.LightActivity
 ```
 
