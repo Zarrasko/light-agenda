@@ -6,6 +6,16 @@ steps) on your Light Phone, pulled from [intervals.icu](https://intervals.icu).
 This is a **personal-use** tool: it's built around your own free intervals.icu API key. See
 "Why this instead of Strava or Garmin directly" below for why.
 
+## Screenshots
+
+| Home | Today detail | Activities |
+| --- | --- | --- |
+| ![Home screen showing today's wellness snapshot, fitness trend, and upcoming workout](screenshots/home.png) | ![Today detail screen showing sleep and heart stats](screenshots/today-detail.png) | ![This week summary and activities list](screenshots/activities-list.png) |
+
+| Schedule a Workout | Interval builder | Activity detail |
+| --- | --- | --- |
+| ![Schedule a Workout screen, Base structure](screenshots/schedule-base.png) | ![Schedule a Workout screen, Intervals structure with warmup, repeats, work, and target](screenshots/schedule-intervals.png) | ![Activity detail screen showing distance, pace, and heart rate](screenshots/activity-detail.png) |
+
 There are two parts to getting this running: **getting the app onto your Light Phone**
 (this section - it needs a computer and a few typed commands, there's no way around that for
 now) and **connecting your intervals.icu account** (the "Connecting Your Account" section below
