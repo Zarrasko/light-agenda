@@ -66,7 +66,7 @@ waiting for it to finish before pasting the next:
 
 ```bash
 cd ~/Desktop
-git clone https://github.com/Zarrasko/light-sdk.git
+git clone -b add-kagi-news-tool https://github.com/Zarrasko/light-sdk.git
 cd light-sdk
 ```
 

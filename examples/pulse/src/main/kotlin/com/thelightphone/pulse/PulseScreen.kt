@@ -107,6 +107,12 @@ class PulseScreen(sealedActivity: SealedLightActivity) :
                         onOpenGear = {
                             navigateTo(screenFactory = { PulseGearScreen(it) })
                         },
+                        onOpenTodayDetail = { wellness ->
+                            navigateTo(screenFactory = { PulseTodayDetailScreen(it, wellness) })
+                        },
+                        onScheduleWorkout = {
+                            navigateTo(screenFactory = { PulseScheduleWorkoutScreen(it) })
+                        },
                     )
 
                     is PulseScreenMode.Settings -> SettingsContent(
@@ -181,8 +187,8 @@ private fun SetupContent(
         ) {
             LightText(
                 text = "Paste your intervals.icu API key, or scan a QR code generated from " +
-                    "it. Free account, no subscription needed. See this tool's README for how " +
-                    "to get one.",
+                    "it. Free account, no subscription needed. See this tool's README, or tap " +
+                    "the list icon below for on-device instructions, for how to get one.",
                 variant = LightTextVariant.Detail,
                 lighten = true,
                 modifier = Modifier.padding(bottom = 1.5f.gridUnitsAsDp()),
@@ -303,6 +309,8 @@ private fun ActivitiesContent(
     onSelectActivity: (SummaryActivity) -> Unit,
     onShowFitnessInfo: () -> Unit,
     onOpenGear: () -> Unit,
+    onOpenTodayDetail: (Wellness) -> Unit,
+    onScheduleWorkout: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         LightTopBar(
@@ -324,7 +332,12 @@ private fun ActivitiesContent(
                     showSteps = fieldPreferences.showSteps,
                 )
                 if (parts.isNotEmpty()) {
-                    TodayWellnessRow(parts, modifier = Modifier.padding(bottom = 1.5f.gridUnitsAsDp()))
+                    TodayWellnessRow(
+                        parts,
+                        modifier = Modifier
+                            .lightClickable(onClick = { onOpenTodayDetail(wellness) })
+                            .padding(bottom = 1.5f.gridUnitsAsDp()),
+                    )
                 }
                 if (fieldPreferences.showFitnessTrend) {
                     wellness.fitnessTrend()?.let { trend ->
@@ -403,6 +416,11 @@ private fun ActivitiesContent(
                     contentDescription = "Refresh",
                 ),
                 LightBarButton.LightIcon(
+                    icon = LightIcons.PENCIL,
+                    onClick = onScheduleWorkout,
+                    contentDescription = "Schedule a Workout",
+                ),
+                LightBarButton.LightIcon(
                     icon = LightIcons.SETTINGS,
                     onClick = onOpenSettings,
                     contentDescription = "Settings",
@@ -434,7 +452,7 @@ private fun TodayWellnessRow(parts: List<String>, modifier: Modifier = Modifier)
             lighten = true,
             modifier = Modifier.padding(bottom = 0.25f.gridUnitsAsDp()),
         )
-        LightText(text = parts.joinToString(" · "), variant = LightTextVariant.Heading)
+        LightText(text = "${parts.joinToString(" · ")} →", variant = LightTextVariant.Heading)
     }
 }
 
@@ -462,7 +480,7 @@ private fun WeekSummaryRow(summary: WeekSummary, modifier: Modifier = Modifier) 
 private fun ActivityRow(activity: SummaryActivity, modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxWidth()) {
         LightText(
-            text = activity.name,
+            text = "${activity.name} →",
             variant = LightTextVariant.Copy,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

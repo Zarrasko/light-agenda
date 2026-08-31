@@ -6,14 +6,32 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.Base64
+
+// intervals.icu parses a lightweight markdown-style syntax out of `description` into the
+// structured workout steps it pushes to Garmin - see PulseScheduleWorkoutScreen for how that
+// text gets built. Nothing here needs to know about workout_doc directly.
+@Serializable
+private data class CreateWorkoutRequest(
+    val category: String = "WORKOUT",
+    @SerialName("start_date_local") val startDateLocal: String,
+    val type: String,
+    val name: String,
+    val description: String,
+)
 
 private const val INTERVALS_API_BASE = "https://intervals.icu/api/v1"
 
@@ -29,9 +47,13 @@ internal class PulseApi {
     // than omitting the field - a non-null field's default only covers a missing key, not an
     // explicit null, so without this every such activity would fail to parse and take the
     // whole activities fetch down with it.
+    // encodeDefaults matters for createWorkoutEvent: without it, CreateWorkoutRequest.category
+    // ("WORKOUT", a default value) gets silently dropped from the outgoing JSON rather than sent
+    // - intervals.icu then rejects the request with 422 "Category is required".
     private val json = Json {
         ignoreUnknownKeys = true
         coerceInputValues = true
+        encodeDefaults = true
     }
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
@@ -90,6 +112,32 @@ internal class PulseApi {
         }
 
         response.body()
+    }
+
+    suspend fun createWorkoutEvent(
+        apiKey: String,
+        startDateLocal: String,
+        type: String,
+        name: String,
+        description: String,
+    ): Result<Unit> = runCatching {
+        val response = client.post("$INTERVALS_API_BASE/$SELF_ATHLETE_PATH/events") {
+            header("Authorization", basicAuthHeader(apiKey))
+            contentType(ContentType.Application.Json)
+            setBody(
+                CreateWorkoutRequest(
+                    startDateLocal = startDateLocal,
+                    type = type,
+                    name = name,
+                    description = description,
+                ),
+            )
+        }
+
+        if (!response.status.isSuccess()) {
+            val body = response.bodyAsText().take(500)
+            throw IllegalStateException("Intervals.icu create workout HTTP ${response.status.value}: $body")
+        }
     }
 
     fun close() {
