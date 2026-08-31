@@ -45,6 +45,32 @@ data class Wellness(
         get() = restingHR != null || hrv != null || sleepSecs != null || steps != null
 }
 
+// A calendar entry, not necessarily created by Pulse - any WORKOUT-category event on the
+// athlete's intervals.icu calendar (e.g. from Schedule a Workout, or another connected planning
+// tool) shows up the same way.
+@Serializable
+data class PlannedEvent(
+    val id: Long,
+    val name: String,
+    @SerialName("start_date_local") val startDateLocal: String,
+    val category: String? = null,
+)
+
+// "Today"/"Tomorrow" reads better than a bare date on a row that only ever shows the next one
+// or two days - falls back to the short date format for anything further out, though the fetch
+// window in PulseApi never actually asks for more than that.
+fun String.upcomingDayLabel(): String {
+    val datePart = substringBefore("T")
+    val dayFormat = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+    val today = dayFormat.format(java.util.Date())
+    val tomorrow = dayFormat.format(java.util.Date(System.currentTimeMillis() + 24L * 60 * 60 * 1000))
+    return when (datePart) {
+        today -> "Today"
+        tomorrow -> "Tomorrow"
+        else -> formatActivityDate()
+    }
+}
+
 @Serializable
 data class Gear(
     val id: String,

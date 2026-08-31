@@ -42,6 +42,7 @@ private val FIELD_TOGGLES = listOf(
     FieldToggle("HRV", PulsePreferences.SHOW_HRV),
     FieldToggle("Steps", PulsePreferences.SHOW_STEPS),
     FieldToggle("Fitness Trend", PulsePreferences.SHOW_FITNESS_TREND),
+    FieldToggle("Upcoming Workout", PulsePreferences.SHOW_UPCOMING),
     FieldToggle("Gear", PulsePreferences.SHOW_GEAR),
 )
 

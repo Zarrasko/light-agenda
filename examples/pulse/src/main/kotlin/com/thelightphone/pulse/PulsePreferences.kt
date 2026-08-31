@@ -16,4 +16,5 @@ internal object PulsePreferences {
     val SHOW_STEPS = booleanPreferencesKey("show_steps")
     val SHOW_FITNESS_TREND = booleanPreferencesKey("show_fitness_trend")
     val SHOW_GEAR = booleanPreferencesKey("show_gear")
+    val SHOW_UPCOMING = booleanPreferencesKey("show_upcoming")
 }

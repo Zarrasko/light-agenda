@@ -114,6 +114,24 @@ internal class PulseApi {
         response.body()
     }
 
+    // Filters to WORKOUT client-side rather than trusting an unverified query param - the
+    // oldest/newest window already keeps the response small.
+    suspend fun fetchUpcomingEvents(apiKey: String): Result<List<PlannedEvent>> = runCatching {
+        val today = dateFormat.format(Date())
+        val tomorrow = dateFormat.format(Date(System.currentTimeMillis() + 24L * 60 * 60 * 1000))
+        val response = client.get("$INTERVALS_API_BASE/$SELF_ATHLETE_PATH/events?oldest=$today&newest=$tomorrow") {
+            header("Authorization", basicAuthHeader(apiKey))
+        }
+
+        if (!response.status.isSuccess()) {
+            val body = response.bodyAsText().take(500)
+            throw IllegalStateException("Intervals.icu events HTTP ${response.status.value}: $body")
+        }
+
+        val events: List<PlannedEvent> = response.body()
+        events.filter { it.category == "WORKOUT" }.sortedBy { it.startDateLocal }
+    }
+
     suspend fun createWorkoutEvent(
         apiKey: String,
         startDateLocal: String,

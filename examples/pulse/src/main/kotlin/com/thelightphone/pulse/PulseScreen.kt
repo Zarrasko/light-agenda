@@ -350,6 +350,12 @@ private fun ActivitiesContent(
                 }
             }
 
+            if (fieldPreferences.showUpcoming) {
+                mode.upcomingEvent?.let { event ->
+                    UpcomingRow(event, modifier = Modifier.padding(bottom = 1.5f.gridUnitsAsDp()))
+                }
+            }
+
             WeekSummaryRow(mode.weekSummary, modifier = Modifier.padding(bottom = 1.5f.gridUnitsAsDp()))
 
             if (mode.activities.isEmpty()) {
@@ -453,6 +459,22 @@ private fun TodayWellnessRow(parts: List<String>, modifier: Modifier = Modifier)
             modifier = Modifier.padding(bottom = 0.25f.gridUnitsAsDp()),
         )
         LightText(text = "${parts.joinToString(" · ")} →", variant = LightTextVariant.Heading)
+    }
+}
+
+@Composable
+private fun UpcomingRow(event: PlannedEvent, modifier: Modifier = Modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        LightText(
+            text = "UPCOMING",
+            variant = LightTextVariant.Detail,
+            lighten = true,
+            modifier = Modifier.padding(bottom = 0.25f.gridUnitsAsDp()),
+        )
+        LightText(
+            text = "${event.startDateLocal.upcomingDayLabel()} · ${event.name}",
+            variant = LightTextVariant.Heading,
+        )
     }
 }
 

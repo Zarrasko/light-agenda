@@ -32,6 +32,7 @@ sealed class PulseScreenMode {
         val activities: List<SummaryActivity>,
         val wellness: Wellness?,
         val gearSummary: String?,
+        val upcomingEvent: PlannedEvent?,
         val lastSyncedLabel: String?,
         val isSample: Boolean = false,
     ) : PulseScreenMode()
@@ -51,6 +52,7 @@ data class DataFieldPreferences(
     val showHRV: Boolean = true,
     val showSteps: Boolean = true,
     val showFitnessTrend: Boolean = true,
+    val showUpcoming: Boolean = true,
     val showGear: Boolean = true,
 )
 
@@ -100,7 +102,15 @@ class PulseViewModel(
         val activities = runCatching { json.decodeFromString<List<SummaryActivity>>(cachedJson) }.getOrNull()
         if (!activities.isNullOrEmpty()) {
             _uiState.update {
-                it.copy(mode = activitiesMode(activities, wellness = null, gearSummary = null, lastSyncedLabel = syncedAt))
+                it.copy(
+                    mode = activitiesMode(
+                        activities,
+                        wellness = null,
+                        gearSummary = null,
+                        upcomingEvent = null,
+                        lastSyncedLabel = syncedAt,
+                    ),
+                )
             }
         }
     }
@@ -109,6 +119,7 @@ class PulseViewModel(
         activities: List<SummaryActivity>,
         wellness: Wellness?,
         gearSummary: String?,
+        upcomingEvent: PlannedEvent?,
         lastSyncedLabel: String?,
         isSample: Boolean = false,
     ) = PulseScreenMode.Activities(
@@ -116,6 +127,7 @@ class PulseViewModel(
         activities = activities,
         wellness = wellness,
         gearSummary = gearSummary,
+        upcomingEvent = upcomingEvent,
         lastSyncedLabel = lastSyncedLabel,
         isSample = isSample,
     )
@@ -129,6 +141,7 @@ class PulseViewModel(
                     sampleActivities(),
                     sampleWellness(),
                     gearSummary = gearSummaryText(sampleGear()),
+                    upcomingEvent = sampleUpcomingEvent(),
                     lastSyncedLabel = null,
                     isSample = true,
                 ),
@@ -145,6 +158,7 @@ class PulseViewModel(
             showHRV = prefs[PulsePreferences.SHOW_HRV] ?: true,
             showSteps = prefs[PulsePreferences.SHOW_STEPS] ?: true,
             showFitnessTrend = prefs[PulsePreferences.SHOW_FITNESS_TREND] ?: true,
+            showUpcoming = prefs[PulsePreferences.SHOW_UPCOMING] ?: true,
             showGear = prefs[PulsePreferences.SHOW_GEAR] ?: true,
         )
     }
@@ -161,10 +175,12 @@ class PulseViewModel(
 
         api.fetchActivities(apiKey).fold(
             onSuccess = { activities ->
-                // Wellness/gear can legitimately be empty (nothing synced yet, no gear logged)
-                // - never let either block showing the activities that did load.
+                // Wellness/gear/upcoming can legitimately be empty (nothing synced yet, no gear
+                // logged, nothing scheduled) - never let any of them block showing the
+                // activities that did load.
                 val wellness = api.fetchTodayWellness(apiKey).getOrNull()?.takeIf { it.hasAnyData }
                 val gearSummary = api.fetchGear(apiKey).getOrNull()?.let { gearSummaryText(it) }
+                val upcomingEvent = api.fetchUpcomingEvents(apiKey).getOrNull()?.firstOrNull()
                 val syncedAt = nowLabel()
                 runCatching {
                     dataStore.edit { prefs ->
@@ -173,7 +189,10 @@ class PulseViewModel(
                     }
                 }
                 _uiState.update {
-                    it.copy(mode = activitiesMode(activities, wellness, gearSummary, syncedAt), errorModal = null)
+                    it.copy(
+                        mode = activitiesMode(activities, wellness, gearSummary, upcomingEvent, syncedAt),
+                        errorModal = null,
+                    )
                 }
             },
             onFailure = { error ->

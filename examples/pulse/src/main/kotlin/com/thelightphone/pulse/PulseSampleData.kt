@@ -80,6 +80,13 @@ internal fun sampleWellness(): Wellness = Wellness(
     rampRate = 4.2,
 )
 
+internal fun sampleUpcomingEvent(): PlannedEvent = PlannedEvent(
+    id = -1L,
+    name = "4x 3m Zone 4 / 2m rest Run",
+    startDateLocal = daysAgo(days = -1, hour = 6),
+    category = "WORKOUT",
+)
+
 internal fun sampleGear(): List<Gear> = listOf(
     Gear(id = "sample-shoe", type = "Shoe", name = "Trail Runner", distance = 321869.0),
     Gear(id = "sample-bike", type = "Bike", name = "Road Bike", distance = 804670.0),
