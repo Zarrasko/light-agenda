@@ -2,32 +2,11 @@
 
 | Module | Package | Description |
 |--------|---------|-------------|
-| `ui-demo` | `com.thelightphone.uidemo` | UI toolkit gallery: theme, icons, scroll, text input, modal |
-| `weather` | `com.thelightphone.weather` | weather tool via Open-Meteo API |
-| `authenticator` | `com.thelightphone.authenticator` | 2FA authenticator
-| `audio-demo` | `com.thelightphone.audiodemo` | audio SDK showcase: player, recorder, capture, tone
-| `reflect` | `com.thelightphone.reflect` | daily journaling prompt, shake to shuffle
-| `kagi-news` | `com.thelightphone.kaginews` | "Brief" — Kagi News reader via the public kite.kagi.com feed
+| `pulse` | `com.thelightphone.pulse` | activities, wellness, and workout scheduling via intervals.icu |
 
 ## How to run on device
 
 ```bash
-./gradlew :examples:ui-demo:installDebug
-adb shell am start -n com.thelightphone.uidemo/com.thelightphone.sdk.LightActivity
-
-./gradlew :examples:weather:installDebug
-adb shell am start -n com.thelightphone.weather/com.thelightphone.sdk.LightActivity
-
-./gradlew :examples:authenticator:installDebug
-adb shell am start -n com.thelightphone.authenticator/com.thelightphone.sdk.LightActivity
-
-./gradlew :examples:audio-demo:installDebug
-adb shell am start -n com.thelightphone.audiodemo/com.thelightphone.sdk.LightActivity
-
-./gradlew :examples:reflect:installDebug
-adb shell am start -n com.thelightphone.reflect/com.thelightphone.sdk.LightActivity
-
-./gradlew :examples:kagi-news:installDebug
-adb shell am start -n com.thelightphone.kaginews/com.thelightphone.sdk.LightActivity
+./gradlew :examples:pulse:installDebug
+adb shell am start -n com.thelightphone.pulse/com.thelightphone.sdk.LightActivity
 ```
-
