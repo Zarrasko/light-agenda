@@ -17,25 +17,81 @@ This is a **personal-use** tool: it's built around your own free intervals.icu A
 | ![Schedule a Workout screen, Base structure](screenshots/schedule-base.png) | ![Schedule a Workout screen, Intervals structure with warmup, repeats, work, and target](screenshots/schedule-intervals.png) | ![Activity detail screen showing distance, pace, and heart rate](screenshots/activity-detail.png) |
 
 There are two parts to getting this running: **getting the app onto your Light Phone**
-(this section - it needs a computer and a few typed commands, there's no way around that for
-now) and **connecting your intervals.icu account** (the "Connecting Your Account" section below
-- that part is just tapping on the phone itself).
+(this section) and **connecting your intervals.icu account** (the "Connecting Your Account"
+section below - that part is just tapping on the phone itself).
 
 ## Installing Pulse
 
-This whole section is a one-time setup. Budget about 30-45 minutes, most of which is just
-waiting for downloads. You don't need to understand what any of these tools do - just follow
-the steps in order and copy-paste the commands exactly as written.
+There are two ways to do this. Almost everyone wants the first one.
 
-**What you'll need:** a Mac or Windows computer, your Light Phone III, a USB cable that connects
-the two, and a wifi connection.
+- **[Quick install](#quick-install-recommended)** - download the app directly. About 10
+  minutes, no building, and you don't need to understand what any of these tools do - just
+  follow the steps in order and copy-paste the commands exactly as written.
+- **[Building from source](#building-from-source-optional)** - only if you want to modify
+  Pulse's code yourself. Budget 30-45 minutes.
 
-> These instructions are written for **macOS**. If you're on Windows, the same five parts apply
-> - install Android Studio, install Git, download this code, build it, turn on your phone's
-> developer settings, plug it in and install - just using Windows' own installers and Command
-> Prompt instead of Terminal. The exact commands differ slightly; search "[step name] on
-> Windows" if you get stuck, or ask a tech-comfortable friend to walk through this one section
-> with you.
+**What you'll need either way:** a Mac or Windows computer, your Light Phone III, a USB cable
+that connects the two, and a wifi connection.
+
+### Quick install (recommended)
+
+You do **not** need Android Studio for this - just a small tool called `adb` that lets a
+computer talk to your phone over USB.
+
+> Written for **macOS**. On Windows, the same steps apply with Windows' own downloads and
+> Command Prompt instead of Terminal - search "[step name] on Windows" if you get stuck.
+
+#### Step 1: Turn on your phone's developer settings (one-time)
+
+This is what allows your phone to install an app directly from a computer instead of an app
+store.
+
+1. On your Light Phone III: **Settings → About Phone** (exact wording may vary slightly).
+2. Find **Build Number** and tap it **seven times in a row**. You'll see a message count down
+   ("You are now 3 steps away from being a developer," etc.) and eventually "You are now a
+   developer!"
+3. Go back to the main Settings screen. A new option called **Developer Options** will now
+   appear. Open it.
+4. Turn on **USB Debugging** (near the top of that list).
+
+#### Step 2: Get `adb`
+
+1. Go to <https://developer.android.com/tools/releases/platform-tools> and download **SDK
+   Platform-Tools** for macOS (or Windows, if that's what you're on).
+2. Unzip it somewhere easy to find, like your Desktop. You'll get a folder called
+   `platform-tools` - that's it, nothing to install or run yet.
+
+#### Step 3: Download Pulse
+
+Go to the [latest release](https://github.com/Zarrasko/pulse/releases/latest) and download the
+`.apk` file (it'll land in your Downloads folder).
+
+#### Step 4: Install it on your phone
+
+1. Plug your Light Phone into your computer with the USB cable.
+2. Your phone screen will show a popup asking to allow USB debugging from this computer.
+   **Check "always allow from this computer"** and tap **Allow**.
+3. Open Terminal (Cmd+Space, type "Terminal", press Enter), then copy-paste this, replacing
+   `~/Desktop/platform-tools` and the `.apk` filename with wherever yours actually landed:
+
+   ```bash
+   ~/Desktop/platform-tools/adb install ~/Downloads/pulse-v1.0.0.apk
+   ```
+
+4. When it says `Success`, Pulse is on your phone. Find it in your Light Phone's app list and
+   open it.
+
+You're done with the computer part. Everything from here happens on the phone - see
+"Connecting Your Account" below.
+
+**Updating later:** download the new `.apk` from
+[Releases](https://github.com/Zarrasko/pulse/releases/latest) and run the same `adb install`
+command again - installing over an existing copy keeps your connected account.
+
+### Building from source (optional)
+
+Only follow this section if you want to modify Pulse's own code. If you just want to run the
+app, use Quick Install above instead.
 
 ### Part 1: Install Android Studio (one-time)
 
@@ -76,13 +132,13 @@ waiting for it to finish before pasting the next:
 
 ```bash
 cd ~/Desktop
-git clone -b add-kagi-news-tool https://github.com/Zarrasko/light-sdk.git
-cd light-sdk
+git clone https://github.com/Zarrasko/pulse.git
+cd pulse
 ```
 
-This creates a folder called `light-sdk` on your Desktop and moves Terminal "into" it. Every
+This creates a folder called `pulse` on your Desktop and moves Terminal "into" it. Every
 command in the rest of this guide assumes Terminal is still in that folder - if you close and
-reopen Terminal later, run `cd ~/Desktop/light-sdk` again first.
+reopen Terminal later, run `cd ~/Desktop/pulse` again first.
 
 ### Part 4: Tell the project where Android Studio put its tools
 
@@ -90,7 +146,7 @@ reopen Terminal later, run `cd ~/Desktop/light-sdk` again first.
    gear/settings icon) → **SDK Manager**.
 2. Near the top of that window, there's a line labeled **Android SDK Location** with a file path
    next to it (usually `/Users/yourname/Library/Android/sdk`). Copy that whole path.
-3. Back in Terminal (still in the `light-sdk` folder), copy-paste this to create the file and
+3. Back in Terminal (still in the `pulse` folder), copy-paste this to create the file and
    open it in TextEdit, the plain text editor already on your Mac:
 
    ```bash
@@ -108,7 +164,7 @@ reopen Terminal later, run `cd ~/Desktop/light-sdk` again first.
 
 ### Part 5: Build the app
 
-Back in Terminal, in the `light-sdk` folder, copy-paste:
+Back in Terminal, in the `pulse` folder, copy-paste:
 
 ```bash
 ./gradlew :examples:pulse:assembleDebug
@@ -122,16 +178,8 @@ breaks.
 
 ### Part 6: Turn on your phone's developer settings
 
-This only needs to be done once per phone, and it's what allows a phone to install an app
-directly from a computer instead of an app store.
-
-1. On your Light Phone III: **Settings → About Phone** (exact wording may vary slightly).
-2. Find **Build Number** and tap it **seven times in a row**. You'll see a message count down
-   ("You are now 3 steps away from being a developer," etc.) and eventually "You are now a
-   developer!"
-3. Go back to the main Settings screen. A new option called **Developer Options** will now
-   appear. Open it.
-4. Turn on **USB Debugging** (near the top of that list).
+Same one-time step as Quick Install's [Step 1](#step-1-turn-on-your-phones-developer-settings-one-time)
+above - if you already did that, skip ahead to Part 7.
 
 ### Part 7: Connect and install
 
