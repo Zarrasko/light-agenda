@@ -28,15 +28,20 @@ import kotlin.math.roundToInt
 private data class TodayStat(val label: String, val value: String)
 
 private fun Wellness.sleepStats(): List<TodayStat> = listOfNotNull(
+    // Quality is dropped deliberately - it's just Score re-banded into 1-4 (Garmin's own
+    // Great/Good/Average/Poor mapping), not independent information.
     sleepScore?.let { TodayStat("Score", it.roundToInt().toString()) },
     sleepSecs?.let { TodayStat("Duration", it.formatSleepDuration()) },
-    sleepQuality?.let { TodayStat("Quality", it.toString()) },
     avgSleepingHR?.let { TodayStat("Avg sleeping HR", "${it.roundToInt()} bpm") },
 )
 
 private fun Wellness.heartStats(): List<TodayStat> = listOfNotNull(
     restingHR?.let { TodayStat("Resting", "$it bpm") },
     hrv?.let { TodayStat("HRV", "${it.roundToInt()} ms") },
+)
+
+private fun Wellness.activityStats(): List<TodayStat> = listOfNotNull(
+    steps?.let { TodayStat("Steps", it.toString()) },
 )
 
 private fun Wellness.bodyStats(): List<TodayStat> = listOfNotNull(
@@ -90,6 +95,7 @@ class PulseTodayDetailScreen(
 
                     StatSection("SLEEP", wellness.sleepStats())
                     StatSection("HEART", wellness.heartStats())
+                    StatSection("ACTIVITY", wellness.activityStats())
                     StatSection("BODY", wellness.bodyStats())
                 }
             }
