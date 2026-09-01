@@ -17,7 +17,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "light-sdk"
+rootProject.name = "pulse"
 
 includeBuild("plugin")
 include(":lint-rules")
@@ -27,17 +27,5 @@ include(":sdk:client")
 include(":sdk:server")
 include(":sdk:emulator")
 include(":tool")
-include(":examples:ui-demo")
-project(":examples:ui-demo").projectDir = file("examples/ui-demo")
-include(":examples:weather")
-project(":examples:weather").projectDir = file("examples/weather")
-include(":examples:authenticator")
-project(":examples:authenticator").projectDir = file("examples/authenticator")
-include(":examples:audio-demo")
-project(":examples:audio-demo").projectDir = file("examples/audio-demo")
-include(":examples:reflect")
-project(":examples:reflect").projectDir = file("examples/reflect")
-include(":examples:kagi-news")
-project(":examples:kagi-news").projectDir = file("examples/kagi-news")
 include(":examples:pulse")
 project(":examples:pulse").projectDir = file("examples/pulse")
