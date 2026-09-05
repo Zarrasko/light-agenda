@@ -3,6 +3,7 @@ id = "com.thelightphone.pulse"
 label = "Pulse"
 versionCode = 2
 versionName = "1.0.1"
+orientation = "portrait"
 permissions = ["android.permission.INTERNET"]
 serverPackage = "com.lightos"
 # change if you run this on the emulator!
