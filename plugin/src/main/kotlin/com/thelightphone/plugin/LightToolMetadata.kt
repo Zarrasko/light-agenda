@@ -156,6 +156,13 @@ object LightToolPolicy {
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.NFC",
+        // "Display over other apps" - a special-access permission Android deliberately keeps
+        // out of the normal runtime-prompt flow (historically abused for tapjacking/overlay
+        // attacks), so granting it needs a manual Settings toggle or `adb shell appops set
+        // <pkg> SYSTEM_ALERT_WINDOW allow` - there's no one-tap system dialog for it the way
+        // there is for CAMERA or POST_NOTIFICATIONS. Needed for a heads-up-style alert on
+        // LightOS builds where the standard notification shade isn't reachable by the user.
+        "android.permission.SYSTEM_ALERT_WINDOW",
     )
 
     /**
