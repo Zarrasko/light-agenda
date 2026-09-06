@@ -14,6 +14,9 @@ internal data class FetchResult(val events: List<AgendaEvent>, val hadSourceErro
 // coming before the event itself is anywhere near due.
 internal const val AGENDA_WINDOW_DAYS = 14L
 
+internal fun nowLabel(): String =
+    java.text.SimpleDateFormat("h:mm a", java.util.Locale.getDefault()).format(java.util.Date())
+
 internal suspend fun fetchAllEvents(
     api: AgendaApi,
     sources: List<CalendarSource>,

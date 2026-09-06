@@ -1,8 +1,8 @@
 [tool]
 id          = "com.thelightphone.agenda"
 label       = "Agenda"
-versionCode = 5
-versionName = "1.4.0"
+versionCode = 6
+versionName = "1.5.0"
 orientation = "portrait"
 permissions = ["android.permission.INTERNET", "android.permission.CAMERA", "android.permission.VIBRATE", "android.permission.SYSTEM_ALERT_WINDOW", "android.permission.POST_NOTIFICATIONS"]
 # change if you run this on the emulator!

@@ -124,9 +124,6 @@ class AgendaViewModel(
         _uiState.update { it.copy(errorModal = null) }
     }
 
-    private fun nowLabel(): String =
-        java.text.SimpleDateFormat("h:mm a", java.util.Locale.getDefault()).format(java.util.Date())
-
     override fun onCleared() {
         super.onCleared()
         api.close()

@@ -38,10 +38,11 @@ val agendaReminderJob: LightJobHandler = handler@{ lightContext, _ ->
     try {
         runCatching {
             val now = Instant.now()
-            // Wide fetch window (matching the main agenda's own horizon) rather than just the
-            // next 15 minutes - a "1 day before" alert on an event a day out needs that event to
-            // already be visible to this run, long before the event itself is anywhere close.
-            val result = fetchAllEvents(api, sources, now, now.plus(AGENDA_WINDOW_DAYS, ChronoUnit.DAYS))
+            // Same windowStart (start of today) as AgendaViewModel's own fetch - this result
+            // gets written into the exact cache the visible list reads from, so the two need to
+            // agree on what "the agenda" covers, not just on what's due for a reminder.
+            val windowStart = now.truncatedTo(ChronoUnit.DAYS)
+            val result = fetchAllEvents(api, sources, windowStart, windowStart.plus(AGENDA_WINDOW_DAYS, ChronoUnit.DAYS))
 
             val notifiedKeys = dataStore.data.first()[AgendaPreferences.NOTIFIED_EVENT_KEYS_JSON]
                 ?.let { runCatching { json.decodeFromString<Set<String>>(it) }.getOrNull() }
@@ -58,6 +59,18 @@ val agendaReminderJob: LightJobHandler = handler@{ lightContext, _ ->
                     title = event.title,
                     text = "${event.timeRangeLabel()} · ${event.calendarLabel}",
                 )
+            }
+
+            // A background check happens to do exactly the same fetch the visible list needs -
+            // sharing it here means opening the app can show already-fresh data instead of
+            // needing its own manual refresh most of the time. Skipped when every source failed
+            // (a Doze-window network hiccup, say) so a transient blip can't wipe out a good
+            // cache with an empty one.
+            if (!(result.events.isEmpty() && result.hadSourceErrors)) {
+                dataStore.edit { prefs ->
+                    prefs[AgendaPreferences.CACHED_EVENTS_JSON] = json.encodeToString(result.events)
+                    prefs[AgendaPreferences.CACHED_EVENTS_SYNCED_AT] = nowLabel()
+                }
             }
 
             if (due.isNotEmpty()) {
