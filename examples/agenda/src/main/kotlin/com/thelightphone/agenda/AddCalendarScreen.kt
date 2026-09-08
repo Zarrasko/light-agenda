@@ -41,6 +41,17 @@ class AddCalendarScreen(
     sealedActivity: SealedLightActivity,
 ) : SimpleLightScreen<Unit>(sealedActivity) {
 
+    // Hoisted onto the screen instance rather than `remember`-ed inside Content(): this SDK's
+    // navigation host composes exactly one screen's Content() at a time, so navigating to
+    // AgendaQrScannerScreen fully tears this composable down. A `remember { mutableStateOf(...) }`
+    // local would be recreated blank when Content() re-enters composition on the way back,
+    // orphaning whatever the QR scanner's result callback wrote into the old instance. These
+    // fields live on the screen object itself, which the back stack keeps alive across that
+    // round trip, so the scanned URL (or a name typed before scanning) survives it.
+    private var label by mutableStateOf("")
+    private var icsUrl by mutableStateOf("")
+    private var errorMessage by mutableStateOf<String?>(null)
+
     @Composable
     override fun Content() {
         val themeColors by LightThemeController.colors.collectAsState()
@@ -48,10 +59,7 @@ class AddCalendarScreen(
         val repository = remember { AgendaSourcesRepository(lightContext.dataStore) }
         val keyboardOptionsFlow = rememberKeyboardOptions()
 
-        var label by remember { mutableStateOf("") }
-        var icsUrl by remember { mutableStateOf("") }
         var editingField by remember { mutableStateOf(EditingField.NONE) }
-        var errorMessage by remember { mutableStateOf<String?>(null) }
         val textFieldState = rememberTextFieldState("")
 
         LightTheme(colors = themeColors) {

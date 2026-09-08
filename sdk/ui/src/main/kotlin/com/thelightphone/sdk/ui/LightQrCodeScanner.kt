@@ -2,6 +2,7 @@ package com.thelightphone.sdk.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Rect
 import android.view.View
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,6 +35,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.viewinterop.AndroidView
@@ -90,6 +92,19 @@ fun LightQrCodeScanner(
     val scannedOnce = remember { AtomicBoolean(false) }
     val onScannedState = rememberUpdatedState(onScanned)
     val onBackState = rememberUpdatedState(onBack)
+
+    // LightOS runs full gesture navigation, whose edge back-swipe zone lands right where a
+    // hand naturally rests while angling the rear camera at a code held up across the room.
+    // Without this, that ordinary re-grip is read as a system back press and silently pops
+    // this screen via LightActivity's global onBackPressedDispatcher callback - before the
+    // code is ever fully in frame. Excluding the whole screen only while the scanner is on
+    // screen leaves every other screen's back-swipe untouched; the visible back button above
+    // still works normally.
+    val rootView = LocalView.current
+    DisposableEffect(rootView) {
+        rootView.systemGestureExclusionRects = listOf(Rect(0, 0, 4096, 4096))
+        onDispose { rootView.systemGestureExclusionRects = emptyList() }
+    }
 
     Box(
         modifier = modifier
