@@ -4,6 +4,12 @@ Shows a merged, read-only agenda on your Light Phone, pulled from any number of 
 URLs - Outlook, Proton Calendar, Google, iCloud, or anything else that can hand you a
 "subscribe to this calendar" link.
 
+## Screenshots
+
+| Add Calendar |
+| --- |
+| ![Add Calendar screen with Name and ICS URL fields, and a camera icon to scan a QR code instead of typing a long URL](screenshots/add-calendar.png) |
+
 ## Why this exists
 
 LightOS's built-in Calendar app only offers Google and iCloud as connection options. Outlook
