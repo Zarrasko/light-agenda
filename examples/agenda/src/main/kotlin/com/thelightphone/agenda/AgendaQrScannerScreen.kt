@@ -17,10 +17,10 @@ import com.thelightphone.sdk.ui.LightThemeController
 import com.thelightphone.sdk.ui.LightThemeTokens
 
 // Scans a QR code containing just the raw ICS URL - generate one offline (see this tool's
-// README) so a private calendar link never touches a third-party web service. Same pattern as
-// Pulse's PulseQrScannerScreen, for the same reason: typing a 100+ character URL on the
-// embedded keyboard one letter at a time is painful, and there's no clipboard/paste support to
-// fall back on (LightTextInputEditor has no ClipboardManager/TextToolbar wiring).
+// README) so a private calendar link never touches a third-party web service. Typing a
+// 100+ character URL on the embedded keyboard one letter at a time is painful, and there's no
+// clipboard/paste support to fall back on (LightTextInputEditor has no ClipboardManager/
+// TextToolbar wiring).
 class AgendaQrScannerScreen(
     sealedActivity: SealedLightActivity,
 ) : SimpleLightScreen<String?>(sealedActivity) {

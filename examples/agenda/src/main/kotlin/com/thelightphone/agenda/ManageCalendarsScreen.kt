@@ -37,8 +37,8 @@ import com.thelightphone.sdk.ui.gridUnitsAsDp
 import com.thelightphone.sdk.ui.lightClickable
 import kotlinx.coroutines.launch
 
-// Self-sufficient like PulseGearScreen - reads/writes DataStore directly rather than routing
-// through AgendaViewModel, since it's reached by navigateTo, not a mode of the main screen.
+// Self-sufficient - reads/writes DataStore directly rather than routing through
+// AgendaViewModel, since it's reached by navigateTo, not a mode of the main screen.
 class ManageCalendarsScreen(
     sealedActivity: SealedLightActivity,
 ) : SimpleLightScreen<Unit>(sealedActivity) {

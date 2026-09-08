@@ -8,10 +8,9 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.util.UUID
 
-// Configured calendar feeds - stored as plain JSON, same as Pulse caches its activities list.
-// An ICS URL is a bearer capability (whoever has it can read the calendar), same as any
-// subscribe link a stock calendar app stores, but it's not a login credential worth the
-// extra complexity of Pulse's AES-encrypted API key storage.
+// Configured calendar feeds - stored as plain JSON. An ICS URL is a bearer capability (whoever
+// has it can read the calendar), same as any subscribe link a stock calendar app stores, but
+// it's not a login credential worth the extra complexity of encrypted storage.
 internal class AgendaSourcesRepository(private val dataStore: DataStore<Preferences>) {
     private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }
 
