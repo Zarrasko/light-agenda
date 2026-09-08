@@ -2,11 +2,11 @@
 
 | Module | Package | Description |
 |--------|---------|-------------|
-| `pulse` | `com.thelightphone.pulse` | activities, wellness, and workout scheduling via intervals.icu |
+| `agenda` | `com.thelightphone.agenda` | merges read-only Outlook/iCloud/Proton/Google calendar feeds into one agenda, with reminders and clickable links |
 
 ## How to run on device
 
 ```bash
-./gradlew :examples:pulse:installDebug
-adb shell am start -n com.thelightphone.pulse/com.thelightphone.sdk.LightActivity
+./gradlew :examples:agenda:installDebug
+adb shell am start -n com.thelightphone.agenda/com.thelightphone.sdk.LightActivity
 ```

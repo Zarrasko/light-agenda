@@ -1,10 +1,11 @@
 # light-sdk
 or: a tool for building Tools
 
-> **Looking for Pulse?** This fork exists to host and build
-> [Pulse](examples/pulse/README.md), a Light Phone III tool for activities, wellness, and
-> workout scheduling via intervals.icu. Everything below is Light Phone's own SDK
-> documentation, kept as-is since Pulse builds directly against it.
+> **Looking for Agenda?** This fork exists to host and build
+> [Agenda](examples/agenda/README.md), a Light Phone III tool that merges read-only calendar
+> feeds (Outlook, iCloud, Proton, Google) into one agenda, with reminders and clickable links.
+> Everything below is Light Phone's own SDK documentation, kept as-is since Agenda builds
+> directly against it.
 
 ## tl;dr
 This repository contains the scaffolding for building simple tools for the Light Phone III. Included are a library ([:sdk:client](./sdk/client)) and placeholder application ([:tool](./tool)) that depends on it. To create a tool that is fully compatible with LightOS, you must write your application code within the `tool` module, using the primitives provided by the sdk client library.

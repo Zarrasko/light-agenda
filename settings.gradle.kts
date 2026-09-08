@@ -17,7 +17,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "pulse"
+rootProject.name = "agenda"
 
 includeBuild("plugin")
 include(":lint-rules")
@@ -27,7 +27,5 @@ include(":sdk:client")
 include(":sdk:server")
 include(":sdk:emulator")
 include(":tool")
-include(":examples:pulse")
-project(":examples:pulse").projectDir = file("examples/pulse")
 include(":examples:agenda")
 project(":examples:agenda").projectDir = file("examples/agenda")

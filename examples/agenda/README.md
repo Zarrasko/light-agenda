@@ -45,19 +45,20 @@ the tool along with a short label like "Work" or "Personal".
 
 ## Building and installing
 
-Same pattern as this repo's other example tools:
-
 ```bash
 ./gradlew :examples:agenda:assembleDebug
 ```
 
-or, with your Light Phone connected over USB and developer mode/USB debugging on (see
-[`examples/pulse`](../pulse/README.md#step-1-turn-on-your-phones-developer-settings-one-time)
-for that one-time setup):
+or, with your Light Phone connected over USB, to install it directly:
 
 ```bash
 ./gradlew :examples:agenda:installDebug
 ```
+
+**One-time setup for that:** on the Light Phone III, go to **Settings → About Phone**, find
+**Build Number**, and tap it seven times until it says "You are now a developer!" Then go back
+to Settings → **Developer Options** and turn on **USB Debugging**. The first time you plug the
+phone in, it'll ask to allow USB debugging from this computer - check "always allow" and accept.
 
 ## Notes on what's parsed
 
