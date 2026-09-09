@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.thelightphone.sdk.LightOverlay
 import com.thelightphone.sdk.SealedLightActivity
 import com.thelightphone.sdk.SimpleLightScreen
+import com.thelightphone.sdk.rememberNotificationPermissionRequester
 import com.thelightphone.sdk.rememberOverlayPermissionRequester
 import com.thelightphone.sdk.ui.LightBarButton
 import com.thelightphone.sdk.ui.LightBottomBar
@@ -57,6 +58,9 @@ class ManageCalendarsScreen(
         val requestOverlayPermission = rememberOverlayPermissionRequester { granted ->
             remindersGranted = granted
         }
+        // See AgendaScreen: requested alongside the overlay, unconditionally, as an independent
+        // second path to the same alert for launchers that bury the overlay window.
+        val requestNotificationPermission = rememberNotificationPermissionRequester()
 
         LaunchedEffect(reloadKey) { sources = repository.load() }
 
@@ -103,7 +107,10 @@ class ManageCalendarsScreen(
                             modifier = if (remindersGranted) {
                                 Modifier
                             } else {
-                                Modifier.lightClickable(onClick = { requestOverlayPermission() })
+                                Modifier.lightClickable(onClick = {
+                                    requestOverlayPermission()
+                                    requestNotificationPermission()
+                                })
                             },
                         )
                         if (!remindersGranted) {

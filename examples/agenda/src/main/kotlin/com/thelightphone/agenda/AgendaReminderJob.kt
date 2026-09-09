@@ -4,6 +4,7 @@ import androidx.datastore.preferences.core.edit
 import com.thelightphone.sdk.LightJob
 import com.thelightphone.sdk.LightJobHandler
 import com.thelightphone.sdk.LightJobResult
+import com.thelightphone.sdk.LightNotifications
 import com.thelightphone.sdk.LightOverlay
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.encodeToString
@@ -56,6 +57,19 @@ val agendaReminderJob: LightJobHandler = handler@{ lightContext, _ ->
             due.forEach { event ->
                 LightOverlay.show(
                     lightContext = lightContext,
+                    title = event.title,
+                    text = "${event.timeRangeLabel()} · ${event.calendarLabel}",
+                )
+                // Belt-and-suspenders alongside the overlay: some launchers (custom ones on top
+                // of LightOS, or a future LightOS revision) draw their own always-on-top window
+                // - a keyguard, a dock, whatever - above TYPE_APPLICATION_OVERLAY, which silently
+                // buries the box with no error and no way for this code to detect it. A real
+                // notification is a second, independent path to the same alert that doesn't
+                // depend on window z-order. No-ops quietly if POST_NOTIFICATIONS was never
+                // granted, so this is always safe to call.
+                LightNotifications.post(
+                    lightContext = lightContext,
+                    notificationId = event.reminderKey().hashCode(),
                     title = event.title,
                     text = "${event.timeRangeLabel()} · ${event.calendarLabel}",
                 )

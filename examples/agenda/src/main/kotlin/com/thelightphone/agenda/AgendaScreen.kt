@@ -24,6 +24,7 @@ import com.thelightphone.sdk.LightScreen
 import com.thelightphone.sdk.LightWork
 import com.thelightphone.sdk.LightOverlay
 import com.thelightphone.sdk.SealedLightActivity
+import com.thelightphone.sdk.rememberNotificationPermissionRequester
 import com.thelightphone.sdk.rememberOverlayPermissionRequester
 import com.thelightphone.sdk.ui.LightBarButton
 import com.thelightphone.sdk.ui.LightBottomBar
@@ -67,6 +68,11 @@ class AgendaScreen(sealedActivity: SealedLightActivity) :
         val requestOverlayPermission = rememberOverlayPermissionRequester { granted ->
             remindersGranted = granted
         }
+        // Requested alongside the overlay, not gated on it: a launcher that draws its own
+        // always-on-top window (see AgendaReminderJob) can bury the overlay with no way for
+        // this code to detect it, so a real notification is asked for as an independent,
+        // unconditional second path to the same alert.
+        val requestNotificationPermission = rememberNotificationPermissionRequester()
 
         // Reminders only run once permission is granted - re-checking (and re-enqueuing, which
         // is idempotent) every time this screen is shown with calendars configured means a
@@ -101,6 +107,7 @@ class AgendaScreen(sealedActivity: SealedLightActivity) :
                                 lightContext.dataStore.edit { it[AgendaPreferences.HAS_PROMPTED_REMINDERS] = true }
                             }
                             requestOverlayPermission()
+                            requestNotificationPermission()
                         },
                         onRefresh = viewModel::refresh,
                         onManageCalendars = {
